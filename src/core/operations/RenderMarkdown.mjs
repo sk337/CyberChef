@@ -21,7 +21,7 @@ class RenderMarkdown extends Operation {
 
         this.name = "Render Markdown";
         this.module = "Code";
-        this.description = "Renders input Markdown as HTML. HTML rendering is disabled to avoid XSS.";
+        this.description = "Renders input Markdown as HTML.";
         this.infoURL = "https://wikipedia.org/wiki/Markdown";
         this.inputType = "string";
         this.outputType = "html";
@@ -35,6 +35,11 @@ class RenderMarkdown extends Operation {
                 name: "Enable syntax highlighting",
                 type: "boolean",
                 value: true
+            },
+            {
+                name: "Enable HTML",
+                type: "boolean",
+                value: false
             }
         ];
     }
@@ -45,10 +50,10 @@ class RenderMarkdown extends Operation {
      * @returns {html}
      */
     run(input, args) {
-        const [convertLinks, enableHighlighting] = args,
+        const [convertLinks, enableHighlighting, enableHTML] = args,
             md = new MarkdownIt({
                 linkify: convertLinks,
-                html: false, // Explicitly disable HTML rendering
+                html: enableHTML,
                 highlight: function(str, lang) {
                     if (lang && hljs.getLanguage(lang) && enableHighlighting) {
                         try {
